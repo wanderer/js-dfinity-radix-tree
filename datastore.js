@@ -1,8 +1,8 @@
 const Buffer = require('safe-buffer').Buffer
-const crypto = require('crypto')
 const DAG = require('ipld-graph-builder/datastore.js')
 const cbor = require('borc')
 const node = require('./treeNode.js')
+const Blake2s = require('./ext/blake2s.js')
 
 const HASH_LEN = 20
 
@@ -51,8 +51,8 @@ module.exports = class TreeDAG extends DAG {
   }
 
   static getMerkleLink (buf) {
-    const hash = crypto.createHash('sha256')
+    const hash = new Blake2s(HASH_LEN)
     hash.update(buf)
-    return hash.digest().slice(0, HASH_LEN)
+    return Buffer.from(hash.digest())
   }
 }
